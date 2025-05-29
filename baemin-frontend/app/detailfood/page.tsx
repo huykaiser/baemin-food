@@ -28,6 +28,8 @@ export default function Home() {
                         <Image layout="fill" objectFit="cover" src={"/food/ga1.jpg"} alt="Ga"></Image>
                     </div>
                 </div>
+
+                {/* name, kind, address, rating, opening time, price */}
                 <div className=" w-[55%] h-full relative">
                     <div className="absolute top-0 left-0 px-8 py-4">
                         <span className="text-[13px] text-[#187CAA]"><a href="">Home</a> <DoubleRightOutlined className="text-[10px]" /> <a href="">TP.HCM</a> <DoubleRightOutlined className="text-[10px]" /> <a href="">Gà Rán Jollibee - Nguyễn Văn Cừ</a> </span>

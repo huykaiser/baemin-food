@@ -26,9 +26,11 @@ export default function Home() {
                 setLoading(true);
                 const { data } = await categoryAPI.getAll();
 
+                console.log("Fetched categories:", data);
+
                 const formattedCategories = data.map((category: any) => ({
                     name: category.name,
-                    imageSrc: category.imageUrl || `/images/${category.name}.png`,
+                    imageSrc: category.image_url || `/images/${category.name}.png`,
                     description: category.description || "Thức ăn nhanh"
                 }));
                 
@@ -78,6 +80,7 @@ export default function Home() {
             url: '/images/map4.png',
         }
     ]
+    {/* name, kind, address, rating, opening time, price */}
     const TodayFood = {
         title: 'Hôm Nay ăn gì',
         items: [
@@ -123,9 +126,9 @@ export default function Home() {
                 img: '/food/ga1.jpg',
                 kind: 'Quan An'
             },
-
         ]
     }
+
     return (
         <>
             <div className="grid grid-cols-12 gap-4">
@@ -157,11 +160,8 @@ export default function Home() {
                 <div className="col-span-9 w-full  pt-3 pr-8 gap-3 flex flex-col">
                     <ScrollBar items={banneritems} ></ScrollBar>
                     <ScrollFood items={TodayFood}></ScrollFood>
-                    <ScrollFood items={TodayFood}></ScrollFood>
                 </div>
-
             </div>
-
         </>
     )
 }

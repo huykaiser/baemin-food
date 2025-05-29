@@ -10,6 +10,9 @@ import ResultFood from './result';
 import { foodAPI, categoryAPI } from '@/services/api';
 
 const Page: React.FC = () => {
+    const searchParams = useSearchParams();
+    const category = searchParams?.get('category') || null;
+    
     const items=[{
         id:'1',
         name:'Cơm Chiên & Nui Xào Bò - Cống Quỳnh',
@@ -115,7 +118,11 @@ const Page: React.FC = () => {
 
             </div>
             <div className='my-3 flex flex-row'>
-                asdasd
+                {category ? (
+                    <span className='font-medium text-lg'>{category}</span>
+                ) : (
+                    <span className='text-gray-500'>Tất cả các món</span>
+                )}
             </div>
             <ResultFood items={items} />
         </>
