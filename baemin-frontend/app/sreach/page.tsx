@@ -1,9 +1,13 @@
+"use client";
+
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import TypeSelector from './type';
 import AreaSelector from './area';
 import FilterSelector from './filter';
 import ResultFood from './result';
+import { foodAPI, categoryAPI } from '@/services/api';
 
 const Page: React.FC = () => {
     const items=[{

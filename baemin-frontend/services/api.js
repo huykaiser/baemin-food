@@ -62,6 +62,42 @@ export const authAPI = {
 // Other API services can be added here
 
 export default {
-  auth: authAPI,
-  // Add other API categories here as needed
+  auth: authAPI,  // Add other API categories here as needed
+};
+
+// Food related API calls
+export const foodAPI = {
+  // Get foods by category ID
+  getByCategory: async (categoryId) => {
+    return fetchWithErrorHandling(`${API_BASE_URL}/foods/category/${categoryId}`);
+  },
+  
+  // Search foods with filters
+  searchFoods: async (searchParams) => {
+    const queryString = new URLSearchParams(searchParams).toString();
+    return fetchWithErrorHandling(`${API_BASE_URL}/foods/search?${queryString}`);
+  },
+  
+  // Get a single food item by ID
+  getById: async (id) => {
+    return fetchWithErrorHandling(`${API_BASE_URL}/foods/${id}`);
+  }
+};
+
+// Categories related API calls
+export const categoryAPI = {
+  // Get all categories
+  getAll: async () => {
+    return fetchWithErrorHandling(`${API_BASE_URL}/categories`);
+  },
+  
+  // Get category by ID
+  getById: async (id) => {
+    return fetchWithErrorHandling(`${API_BASE_URL}/categories/${id}`);
+  },
+  
+  // Get category by name
+  getByName: async (name) => {
+    return fetchWithErrorHandling(`${API_BASE_URL}/categories/by-name/${encodeURIComponent(name)}`);
+  }
 };
