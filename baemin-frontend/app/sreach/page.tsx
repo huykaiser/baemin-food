@@ -19,8 +19,10 @@ const CATEGORY_MAPPING = {
 const Page: React.FC = () => {
     const searchParams = useSearchParams();
     const category = searchParams?.get('category') || null;
+    const query = searchParams?.get('query') || null;
 
     console.log("Current category from search params:", category);
+    console.log("Current search query:", query);
     const [foods, setFoods] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -57,8 +59,34 @@ const Page: React.FC = () => {
             }
         };
         
-        fetchFoodsByCategory();
-    }, [category]);
+        const searchFoods = async () => {
+            if (!query) return;
+            
+            try {
+                setLoading(true);
+                setError(null);
+                
+                const { data } = await foodAPI.searchFoods({ query });
+
+                if (data) {
+                    setFoods(data);
+                } else {
+                    setFoods([]);
+                }
+            } catch (err) {
+                setError("Failed to search for foods");
+                setFoods([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        if (category) {
+            fetchFoodsByCategory();
+        } else if (query) {
+            searchFoods();
+        }
+    }, [category, query]);
     
     // Fallback data for demonstration
     const fallbackItems = [{
@@ -110,6 +138,8 @@ const Page: React.FC = () => {
             <div className='my-3 flex flex-row'>
                 {category ? (
                     <span className='font-medium text-lg'>{category}</span>
+                ) : query ? (
+                    <span className='font-medium text-lg'>Kết quả tìm kiếm: "{query}"</span>
                 ) : (
                     <span className='text-gray-500'>Tất cả các món</span>
                 )}

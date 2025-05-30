@@ -9,9 +9,12 @@ import { useRouter } from "next/navigation";
 
 export default function HeaderNav() {
     const router = useRouter();
+    const [searchValue, setSearchValue] = useState('');
+    
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-        router.push('/sreach')
-
+        if (value) {
+            router.push(`/sreach?query=${encodeURIComponent(value)}`);
+        }
     };
     const navigation =()=>{
         router.push('/dashboard')
@@ -30,9 +33,11 @@ export default function HeaderNav() {
                 <Search
                 className="w-1/3"
                     placeholder="input search text"
-                    enterButton="Tìm kiếm"
+                    enterButton="Search"
                     size="large"
                     onSearch={onSearch}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    value={searchValue}
                 />
             </div>
             <div className="flex-none w-1/4  flex flex-row items-center  py-2" >
