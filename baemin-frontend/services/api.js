@@ -67,6 +67,11 @@ export default {
 
 // Food related API calls
 export const foodAPI = {
+  // Get all foods
+  getAll: async () => {
+    return fetchWithErrorHandling(`${API_BASE_URL}/foods/get-all-mysql`);
+  },
+  
   // Get foods by category ID
   getByCategory: async (categoryId) => {
     return fetchWithErrorHandling(`${API_BASE_URL}/foods/category/${categoryId}`);

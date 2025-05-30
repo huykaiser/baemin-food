@@ -52,7 +52,7 @@ export default function ScrollBar({ items }: { items: any }) {
                                             <span  > {item.name} </span>
                                         </div>
                                         <div className="w-full truncate text-sm " style={{ color: '#959595' }}>
-                                            <span> {item.adrress}</span>
+                                            <span> {item.address}</span>
                                         </div>
                                         <div className="w-full text-sm border-t  border-beamin-50 mt-2 ">
                                             <span className="mt-2">{item.kind}</span>

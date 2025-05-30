@@ -6,7 +6,7 @@ import ScrollFood from "@/components/scrollFood";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { categoryAPI } from "@/services/api";
+import { categoryAPI, foodAPI } from "@/services/api";
 
 interface Category {
     name: string;
@@ -14,19 +14,31 @@ interface Category {
     description: string;
 }
 
+interface Food {
+    food_id: number;
+    name: string;
+    address?: string;
+    image_url?: string;
+    category_id?: number;
+    kind?: string;
+    price?: number;
+    description?: string;
+}
+
 export default function Home() {
     const router = useRouter();
     const [categories, setCategories] = useState<Category[]>([]);
+    const [foods, setFoods] = useState<Food[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [foodsLoading, setFoodsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [foodsError, setFoodsError] = useState<string | null>(null);
     
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
                 const { data } = await categoryAPI.getAll();
-
-                console.log("Fetched categories:", data);
 
                 const formattedCategories = data.map((category: any) => ({
                     name: category.name,
@@ -51,6 +63,29 @@ export default function Home() {
         };
         
         fetchCategories();
+    }, []);
+    
+    useEffect(() => {
+        const fetchFoods = async () => {
+            try {
+                setFoodsLoading(true);
+                const { data } = await foodAPI.getAll();
+                
+                if (data && data.data) {
+                    setFoods(data.data);
+                    setFoodsError(null);
+                } else {
+                    throw new Error("Invalid data format received from API");
+                }
+            } catch (err) {
+                // console.error("Error fetching foods:", err);
+                setFoodsError("Failed to load foods. Please try again later.");
+            } finally {
+                setFoodsLoading(false);
+            }
+        };
+        
+        fetchFoods();
     }, []);
     
     const handleCategoryClick = (categoryName: string) => {
@@ -80,53 +115,19 @@ export default function Home() {
             url: '/images/map4.png',
         }
     ]
-    {/* name, kind, address, rating, opening time, price */}
+    
+    // Create the TodayFood object with the fetched foods data
     const TodayFood = {
         title: 'Hôm Nay ăn gì',
-        items: [
-            {
-                id: '1',
-                name: ' Gà Ủ Muối Hoa Tiêu - Food',
-                adrress: '4A Đường Số 71, P. Tân Quy, Quận 7, TP. HCM',
-                img: '/food/ga1.jpg',
-                kind: 'Quan An'
-            },
-            {
-                id: '1',
-                name: ' Gà Ủ Muối Hoa Tiêu - Food',
-                adrress: '4A Đường Số 71, P. Tân Quy, Quận 7, TP. HCM',
-                img: '/food/ga1.jpg',
-                kind: 'Quan An'
-            },
-            {
-                id: '1',
-                name: ' Gà Ủ Muối Hoa Tiêu - Food',
-                adrress: '4A Đường Số 71, P. Tân Quy, Quận 7, TP. HCM',
-                img: '/food/ga1.jpg',
-                kind: 'Quan An'
-            },
-            {
-                id: '1',
-                name: ' Gà Ủ Muối Hoa Tiêu - Food',
-                adrress: '4A Đường Số 71, P. Tân Quy, Quận 7, TP. HCM',
-                img: '/food/ga1.jpg',
-                kind: 'Quan An'
-            },
-            {
-                id: '1',
-                name: ' Gà Ủ Muối Hoa Tiêu - Food',
-                adrress: '4A Đường Số 71, P. Tân Quy, Quận 7, TP. HCM',
-                img: '/food/ga1.jpg',
-                kind: 'Quan An'
-            },
-            {
-                id: '1',
-                name: ' Gà Ủ Muối Hoa Tiêu - Food',
-                adrress: '4A Đường Số 71, P. Tân Quy, Quận 7, TP. HCM',
-                img: '/food/ga1.jpg',
-                kind: 'Quan An'
-            },
-        ]
+        items: foodsLoading 
+            ? [] 
+            : foods.map(food => ({
+                id: food.food_id.toString(),
+                name: food.name,
+                address: food.address || 'NaN',
+                img: food.image_url || '/food/ga1.jpg',
+                kind: food.kind || 'Quan An'
+            }))
     }
 
     return (
@@ -159,7 +160,17 @@ export default function Home() {
                 </div>
                 <div className="col-span-9 w-full  pt-3 pr-8 gap-3 flex flex-col">
                     <ScrollBar items={banneritems} ></ScrollBar>
-                    <ScrollFood items={TodayFood}></ScrollFood>
+                    {foodsLoading ? (
+                        <div className="bg-white rounded-2xl w-full min-h-[300px] flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                        </div>
+                    ) : foodsError ? (
+                        <div className="bg-white rounded-2xl w-full min-h-[300px] flex items-center justify-center text-red-500 p-4">
+                            {foodsError}
+                        </div>
+                    ) : (
+                        <ScrollFood items={TodayFood}></ScrollFood>
+                    )}
                 </div>
             </div>
         </>
