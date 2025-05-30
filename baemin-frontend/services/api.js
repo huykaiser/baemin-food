@@ -74,6 +74,7 @@ export const foodAPI = {
   
   // Get foods by category ID
   getByCategory: async (categoryId) => {
+    console.log(`Fetching foods for category ID: ${categoryId}`);
     return fetchWithErrorHandling(`${API_BASE_URL}/foods/category/${categoryId}`);
   },
   
